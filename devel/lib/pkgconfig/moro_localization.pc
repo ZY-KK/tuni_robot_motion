@@ -1,0 +1,1 @@
+/home/ros/catkin_ws/devel/.private/moro_localization/lib/pkgconfig/moro_localization.pc

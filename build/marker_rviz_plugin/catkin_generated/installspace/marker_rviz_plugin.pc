@@ -1,0 +1,8 @@
+prefix=/home/ros/catkin_ws/install
+
+Name: marker_rviz_plugin
+Description: Description of marker_rviz_plugin
+Version: 0.0.2
+Cflags: 
+Libs: -L/home/ros/catkin_ws/install/lib 
+Requires: 

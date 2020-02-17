@@ -1,0 +1,8 @@
+prefix=/home/ros/catkin_ws/install
+
+Name: moro_navigation
+Description: Description of moro_navigation
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/ros/catkin_ws/install/lib 
+Requires: rospy moro_navigation_msgs nav_msgs geometry_msgs std_msgs actionlib move_base_msgs

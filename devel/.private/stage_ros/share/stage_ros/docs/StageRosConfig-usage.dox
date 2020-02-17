@@ -1,0 +1,10 @@
+\subsubsection usage Usage
+\verbatim
+<node name="stage_ros" pkg="stage_ros" type="stage_ros">
+  <param name="constrainedDiffDrive" type="bool" value="False" />
+  <param name="diffDrive_dWheels" type="double" value="0.3" />
+  <param name="diffDrive_VWheelMax" type="double" value="1.5" />
+  <param name="diffDrive_AVWheelMax" type="double" value="0.5" />
+</node>
+\endverbatim
+

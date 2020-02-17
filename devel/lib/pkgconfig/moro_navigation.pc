@@ -1,0 +1,1 @@
+/home/ros/catkin_ws/devel/.private/moro_navigation/lib/pkgconfig/moro_navigation.pc

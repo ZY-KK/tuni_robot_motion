@@ -1,0 +1,8 @@
+prefix=/home/ros/catkin_ws/devel/.private/moro_localization
+
+Name: moro_localization
+Description: Description of moro_localization
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/ros/catkin_ws/devel/.private/moro_localization/lib 
+Requires: 

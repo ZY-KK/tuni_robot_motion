@@ -1,0 +1,6 @@
+set(moro_navigation_SETUP_PY_VERSION "0.0.0")
+set(moro_navigation_SETUP_PY_SCRIPTS "")
+set(moro_navigation_SETUP_PY_PACKAGES "moro_navigation")
+set(moro_navigation_SETUP_PY_PACKAGE_DIRS "src/moro_navigation")
+set(moro_navigation_SETUP_PY_MODULES "")
+set(moro_navigation_SETUP_PY_MODULE_DIRS "")

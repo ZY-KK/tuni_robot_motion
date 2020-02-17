@@ -1,0 +1,1 @@
+/home/ros/catkin_ws/devel/.private/moro_navigation_msgs/share/gennodejs/ros/moro_navigation_msgs/srv/PlanPath.js

@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/ros/catkin_ws/devel/.private/marker_rviz_plugin/setup.sh

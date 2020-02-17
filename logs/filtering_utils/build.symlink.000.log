@@ -1,0 +1,4 @@
+Symlinking /home/ros/catkin_ws/devel/share/filtering_utils/cmake/filtering_utilsConfig.cmake
+Symlinking /home/ros/catkin_ws/devel/share/filtering_utils/cmake/filtering_utilsConfig-version.cmake
+Symlinking /home/ros/catkin_ws/devel/lib/pkgconfig/filtering_utils.pc
+Symlinking /home/ros/catkin_ws/devel/lib/python2.7/dist-packages/filtering_utils/__init__.py

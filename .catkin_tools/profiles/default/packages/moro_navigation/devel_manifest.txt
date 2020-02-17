@@ -1,0 +1,6 @@
+moro_ros/moro_navigation
+/home/ros/catkin_ws/devel/.private/moro_navigation/cmake.lock /home/ros/catkin_ws/devel/./cmake.lock
+/home/ros/catkin_ws/devel/.private/moro_navigation/share/moro_navigation/cmake/moro_navigationConfig.cmake /home/ros/catkin_ws/devel/share/moro_navigation/cmake/moro_navigationConfig.cmake
+/home/ros/catkin_ws/devel/.private/moro_navigation/share/moro_navigation/cmake/moro_navigationConfig-version.cmake /home/ros/catkin_ws/devel/share/moro_navigation/cmake/moro_navigationConfig-version.cmake
+/home/ros/catkin_ws/devel/.private/moro_navigation/lib/pkgconfig/moro_navigation.pc /home/ros/catkin_ws/devel/lib/pkgconfig/moro_navigation.pc
+/home/ros/catkin_ws/devel/.private/moro_navigation/lib/python2.7/dist-packages/moro_navigation/__init__.py /home/ros/catkin_ws/devel/lib/python2.7/dist-packages/moro_navigation/__init__.py

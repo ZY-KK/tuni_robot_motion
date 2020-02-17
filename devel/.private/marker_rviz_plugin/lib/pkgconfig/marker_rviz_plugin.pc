@@ -1,0 +1,8 @@
+prefix=/home/ros/catkin_ws/devel/.private/marker_rviz_plugin
+
+Name: marker_rviz_plugin
+Description: Description of marker_rviz_plugin
+Version: 0.0.2
+Cflags: 
+Libs: -L/home/ros/catkin_ws/devel/.private/marker_rviz_plugin/lib 
+Requires: 

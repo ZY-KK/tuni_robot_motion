@@ -1,0 +1,8 @@
+prefix=/home/ros/catkin_ws/devel/.private/stage_ros
+
+Name: stage_ros
+Description: Description of stage_ros
+Version: 1.7.5
+Cflags: -I/home/ros/catkin_ws/devel/.private/stage_ros/include
+Libs: -L/home/ros/catkin_ws/devel/.private/stage_ros/lib 
+Requires: 

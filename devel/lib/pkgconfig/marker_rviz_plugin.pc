@@ -1,0 +1,1 @@
+/home/ros/catkin_ws/devel/.private/marker_rviz_plugin/lib/pkgconfig/marker_rviz_plugin.pc

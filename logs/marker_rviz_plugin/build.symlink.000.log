@@ -1,0 +1,4 @@
+Symlinking /home/ros/catkin_ws/devel/share/marker_rviz_plugin/cmake/marker_rviz_pluginConfig-version.cmake
+Symlinking /home/ros/catkin_ws/devel/share/marker_rviz_plugin/cmake/marker_rviz_pluginConfig.cmake
+Symlinking /home/ros/catkin_ws/devel/lib/libmarker_rviz_plugin.so
+Symlinking /home/ros/catkin_ws/devel/lib/pkgconfig/marker_rviz_plugin.pc

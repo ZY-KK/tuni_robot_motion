@@ -1,0 +1,1 @@
+/home/ros/catkin_ws/devel/.private/stage_ros/include/stage_ros/StageRosConfig.h

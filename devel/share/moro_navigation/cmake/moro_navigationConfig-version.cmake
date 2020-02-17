@@ -1,0 +1,1 @@
+/home/ros/catkin_ws/devel/.private/moro_navigation/share/moro_navigation/cmake/moro_navigationConfig-version.cmake

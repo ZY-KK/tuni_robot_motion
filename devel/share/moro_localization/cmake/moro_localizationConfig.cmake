@@ -1,0 +1,1 @@
+/home/ros/catkin_ws/devel/.private/moro_localization/share/moro_localization/cmake/moro_localizationConfig.cmake

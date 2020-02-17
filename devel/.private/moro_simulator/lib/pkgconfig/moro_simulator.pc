@@ -1,0 +1,8 @@
+prefix=/home/ros/catkin_ws/devel/.private/moro_simulator
+
+Name: moro_simulator
+Description: Description of moro_simulator
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/ros/catkin_ws/devel/.private/moro_simulator/lib 
+Requires: 

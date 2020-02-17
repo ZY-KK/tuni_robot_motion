@@ -1,0 +1,8 @@
+prefix=/home/ros/catkin_ws/install
+
+Name: moro_navigation_msgs
+Description: Description of moro_navigation_msgs
+Version: 0.0.0
+Cflags: -I/home/ros/catkin_ws/install/include
+Libs: -L/home/ros/catkin_ws/install/lib 
+Requires: message_runtime geometry_msgs trajectory_msgs

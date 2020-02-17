@@ -1,0 +1,4 @@
+Symlinking /home/ros/catkin_ws/devel/share/moro_navigation/cmake/moro_navigationConfig.cmake
+Symlinking /home/ros/catkin_ws/devel/share/moro_navigation/cmake/moro_navigationConfig-version.cmake
+Symlinking /home/ros/catkin_ws/devel/lib/pkgconfig/moro_navigation.pc
+Symlinking /home/ros/catkin_ws/devel/lib/python2.7/dist-packages/moro_navigation/__init__.py

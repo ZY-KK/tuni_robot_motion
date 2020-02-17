@@ -1,0 +1,9 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~constrainedDiffDrive" : \b [bool] If true, the (below defined) wheel constraints are enforced on the diff-drive model min: False, default: False, max: True
+- \b "~diffDrive_dWheels" : \b [double] Wheels displacement for a differential drive model [m] min: 0.01, default: 0.3, max: 10.0
+- \b "~diffDrive_VWheelMax" : \b [double] Wheels maximum velocity for a differential drive model [m/s] min: 0.01, default: 1.5, max: 10.0
+- \b "~diffDrive_AVWheelMax" : \b [double] Wheels maximum acceleration for a differential drive model [m/s^2] min: 0.01, default: 0.5, max: 10.0
+

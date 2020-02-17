@@ -1,0 +1,1 @@
+/home/ros/catkin_ws/devel/.private/moro_navigation/lib/python2.7/dist-packages/moro_navigation/__init__.py
