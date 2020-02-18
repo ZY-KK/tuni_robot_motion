@@ -5,9 +5,10 @@ import numpy as np
 class EKF:
     def __init__(self, state_vector_size, control_size, measurement_size):
         self.state_vector = np.zeros((state_vector_size, 1))
-        self.cov_matrix = 1000. * np.identity(state_vector_size)
-        #self.q = np.zeros((control_size, control_size))
-        self.q = np.zeros((control_size, 1))
+        self.cov_matrix = 1000. * np.identity(state_vector_size)  #p
+        self.q = np.zeros((control_size, control_size))
+        #self.r = np.zeros((measurement_size,, measurement_size))
+        #self.q = np.zeros((control_size, 1))
         self.R = np.zeros((measurement_size, measurement_size))
         self.motion_j_state = np.zeros((state_vector_size, state_vector_size))
         self.motion_j_noise = np.zeros((state_vector_size, control_size))
@@ -16,24 +17,32 @@ class EKF:
         self.delta_v = 0
         self.delta_w = 0
         self.t = 0
-    def predict(self):
-        self.propagate_state()
+    def predict(self, x, y, theta, v, w):
+        
+        self.propagate_state(x, y, theta, v, w)
         self.calculate_cov()
 
     def update(self):
-        
+        K = (self.calculate_cov*self.obs_j_state.transpose())/(self.obs_j_state*self.calculate_cov*self.obs_j_state.transpose()+self.R)
+        m_x, m_y, theta = self.state_vector[0], self.state_vector[1], self.state_vector[2]
+        self.state_vector = K*()
+        self.Q = (np.eye(self.obs_j_state.shape[0])-K*self.obs_j_state)
+
         pass
 
-    def propagate_state(self):
-        X = []
+    def propagate_state(self, x, y, theta, v, w):
+        state_next = []
+        """
         x = self.state_vector[0]
         y = self.state_vector[1]
         theta = self.state_vector[2]
         v = self.q[0]
         w  =self.q[1]
-        X[0] = x + (v+self.delta_v)*np.sin(theta+(w+self.delta_w)*self.t)/(w+self.delta_w)
-        X[1] = y + (v+self.delta_v)*np.cos(theta+(w+self.delta_w)*self.t)/(w+self.delta_w)
-        X[2] = theta + (w+self.delta_w)*self.t
+        """
+        state_next[0] = x + (v)*np.sin(theta+(w)*self.t)/(w)
+        state_next[1] = y + (v)*np.cos(theta+(w)*self.t)/(w)
+        state_next[2] = theta + (w)*self.t
+        return np.asarray(state_next)
         pass
 
     def calculate_cov(self):
@@ -48,7 +57,7 @@ class EKF:
         theta = self.state_vector[2]
         v = self.q[0]
         w  =self.q[1]
-        self.motion_j_state = np.array([[1, 0, (v+self.delta_v)*np.cos(theta+(w+self.delta_w)*t)/(w+self.delta_w)],[0, 1, -(v+self.delta_v)*np.sin(theta+(w+self.delta_w)*t)/(w+self.delta_w)], [0, 0, 1]])
+        self.motion_j_state = np.array([[1, 0, (v+self.delta_v)*np.cos(theta+(w+self.delta_w)*self.t)/(w+self.delta_w)],[0, 1, -(v+self.delta_v)*np.sin(theta+(w+self.delta_w)*self.t)/(w+self.delta_w)], [0, 0, 1]])
         # self.motion_j_state
         pass
 
@@ -59,17 +68,17 @@ class EKF:
         theta = self.state_vector[2]
         v = self.q[0]
         w  =self.q[1]
-        self.motion_j_noise = np.array([[np.sin(theta+(w+self.delta_w)*self.t)/(w+self.delta_w), -(v+self.delta_v)*np.cos(theta+(w+self.delta_w)*self.t)*self.t/(w+self.delta_w)**2], [np.cos(theta+(w+self.delta_w)*self.t)/(w+self.delta_w), (v+self.delta_v)*np.sin(theta+(w+self.delta_w)*self.t)*self.t/(w+self.delta_w)**2]])
+        self.motion_j_noise = np.array([[np.sin(theta+(w+self.delta_w)*self.t)/(w+self.delta_w), -(v+self.delta_v)*np.cos(theta+(w+self.delta_w)*self.t)*self.t/(w+self.delta_w)**2], [np.cos(theta+(w+self.delta_w)*self.t)/(w+self.delta_w), (v+self.delta_v)*np.sin(theta+(w+self.delta_w)*self.t)*self.t/(w+self.delta_w)**2], [0, self.t]])
         pass
 
     def observation_jacobian_state_vector(self):
         # To DO
         x = self.state_vector[0]
         y = self.state_vector[1]
-        theta = self.state_vector[2]
+        #theta = self.state_vector[2]
         self.obs_j_state = np.array([[x/np.sqrt(x**2+y**2), y/np.sqrt(x**2+y**2), 0], [0, 0, x**2/(x**2+y**2)]])
         pass
-
+    
     def print_initials(self):
         print("Printing some values")
         print("The initial stated is {}").format(self.state_vector)

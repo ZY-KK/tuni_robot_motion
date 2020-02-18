@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import rospy
 import sys
+import numpy as np
 sys.path.append('src/moro_ros/filtering_utils/src/')
 from std_msgs.msg import String
 from nav_msgs.msg import Odometry
@@ -14,6 +15,14 @@ def odom_callback(msg):
     rospy.loginfo("odometry message")
     ekf.print_initials()
     rospy.loginfo(msg.twist.twist.linear.x)
+    v_x = msg.twist.twist.linear.x
+    v_y = msg.twist.twist.linear.y
+    w = msg.twist.twist.angular.z
+    v = np.sqrt(v_x**2+v_y**2)
+    theta = np.arctan(v_y/v_x)
+    ekf.t = 50
+    ekf.q=np.diag([v, w])
+    ekf.state_vector=np.array([v_x*ekf.t, v_y*ekf.t, theta])
     # pass 
     ekf.predict()
     
