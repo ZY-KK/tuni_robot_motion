@@ -10,7 +10,10 @@ from filtering_utils.ekf import EKF
 
 ekf = EKF(3, 2, 2)
 # initialize 
-
+ekf.t = 1/50
+ekf.q = np.diag([1.5, 0.01])
+ekf.R = np.diag([1.5, 0.01])
+ekf.state_vector=np.array([0, 0, 0])
 
 def odom_callback(msg):
     rospy.loginfo("odometry message")
@@ -21,10 +24,6 @@ def odom_callback(msg):
     w = msg.twist.twist.angular.z
     v = np.sqrt(v_x**2+v_y**2)
     theta = np.arctan(v_y/v_x)
-    ekf.t = 50
-    ekf.q=np.diag()
-    ekf.state_vector=np.array([v_x*ekf.t, v_y*ekf.t, theta])
-    # pass 
     ekf.predict(ekf.state_vector[0], ekf.state_vector[1], ekf.state_vector[2], v, theta)
     
     #predict_co_matrix
@@ -33,7 +32,8 @@ def odom_callback(msg):
 
 def marker_callback(msg):
     rospy.loginfo("Marker message")
-    ekf.update()
+
+    #ekf.update(ekf.state_vector[0], ekf.state_vector[1], ekf.state_vector[2], m_x, m_y)
     pass
 
 
