@@ -9,6 +9,7 @@ from marker_msgs.msg import MarkerDetection
 from filtering_utils.ekf import EKF
 
 ekf = EKF(3, 2, 2)
+# initialize 
 
 
 def odom_callback(msg):
@@ -21,10 +22,10 @@ def odom_callback(msg):
     v = np.sqrt(v_x**2+v_y**2)
     theta = np.arctan(v_y/v_x)
     ekf.t = 50
-    ekf.q=np.diag([v, w])
+    ekf.q=np.diag()
     ekf.state_vector=np.array([v_x*ekf.t, v_y*ekf.t, theta])
     # pass 
-    ekf.predict()
+    ekf.predict(ekf.state_vector[0], ekf.state_vector[1], ekf.state_vector[2], v, theta)
     
     #predict_co_matrix
     pass
