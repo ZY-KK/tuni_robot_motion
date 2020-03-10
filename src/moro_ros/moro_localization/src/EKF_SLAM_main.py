@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from filtering_utils.ekf import EKF
+from filtering_utils.EKF_slam import EKF_SLAM
 from marker_msgs.msg import MarkerDetection
 from nav_msgs.msg import Odometry
 from std_msgs.msg import String
@@ -8,25 +8,23 @@ import sys
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 sys.path.append('src/moro_ros/filtering_utils/src/')
 
-ekf = EKF(3, 2, 2)
+ekf_slam = EKF_SLAM(3, 2, 2)
     # initialize
 
 landmarkers = np.array([[7.30, 3.00], [1.00, 1.00], [
                         9.00, 9.00], [1.00, 8.00], [5.80, 8.00]])
 states = []
-true_state = []  
-cov=[]  
-ekf.t = 0.5
-ekf.q = np.diag([0.01, 0.01])
-ekf.R = np.diag([0.5, 0.05])
+true_state = []    
+ekf_slam.t = 0.5
+ekf_slam.q = np.diag([0.01, 0.01])
+ekf_slamkf.R = np.diag([0.5, 0.05, 0.05])
 #ekf.P = np.diag([.1, .1, .1])
-ekf.state_vector = np.array([5.0, 5.0, -np.pi])
-states.append(ekf.state_vector)
-ekf.print_initials()
+ekf_slam.state_vector = np.array([5.0, 5.0, -np.pi])
+states.append(ekf_slam.state_vector)
+ekf_slam.print_initials()
 
 
 def odom_callback(msg):
@@ -54,7 +52,7 @@ def odom_callback(msg):
     #theta = np.arctan2(v_y, v_x)
     control_vector = np.array([v, w])
     #print(control_vector)
-    ekf.predict(control_vector)
+    ekf_slam.predict(control_vector)
     pass
 def quat2euler(x, y, z , w):
     r = math.atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y))
@@ -68,8 +66,8 @@ def quat2euler(x, y, z , w):
 
 def marker_callback(msg):
     #rospy.loginfo("Marker message")
-    K_z = 0
-    K_h = 0
+    K_z_sum = 0
+    K_h_sum = 0
     for marker in msg.markers:
         id = marker.ids[0]
         b_x = marker.pose.position.x
@@ -79,25 +77,21 @@ def marker_callback(msg):
         o_z = marker.pose.orientation.z
         o_w = marker.pose.orientation.w
         #z_a = quat2euler(o_x, o_y, o_z, o_w)
-        z_a = euler_from_quaternion([o_x, o_y, o_z, o_w])
-
+        o_a = euler_from_quaternion([o_x, o_y, o_z, o_w])
+        K, H = ekf_slam.update(id, landmarkers[id-1][0],landmarkers[id-1][1], b_x, b_y, o_a[2], id)
+        K_z_sum+=np.dot(K, residual(np.array([b_x, b_y, o_a], ekf_slam.z))
+        K_h_sum+=np.dot(K, H)
         
-        z, h = ekf.update(landmarkers[id-1], b_x, b_y, z_a[2], id)
-        K_z = K_z+z
-        K_h = K_h+h
-        
-    ekf.state_vector = ekf.state_vector+K_z
-    ekf.cov_matrix = np.dot(
-            (np.eye(ekf.obs_j_state.shape[1])-K_h), ekf.cov_matrix)
-    point_cov = np.diag(ekf.cov_matrix)
-    cov.append(np.sqrt(np.array(point_cov)))
-    states.append(ekf.state_vector)
-    #print(ekf.state_vector)
-    
-
-    #ekf.update(ekf.state_vector[0], ekf.state_vector[1], ekf.state_vector[2], m_x, m_y)
-    #states.append(ekf.state_vector)
+    ekf_slam.state_vector = ekf_slam.state_vector+K_z_sum
+    ekf_slam.P = np.dot((ekf_slam.I-K_h_sum), ekf_slam.P)
+    states.append(ekf_slam.state_vector)
     pass
+def residual(self, a, b):
+    y = a - b
+    y[1] = y[1] % (2 * np.pi)
+    if y[1] > np.pi:
+        y[1] -= 2 * np.pi
+    return y
 def ground_tru_callback(msg):
     t_x = msg.pose.pose.position.x
     t_y = msg.pose.pose.position.y
@@ -120,15 +114,11 @@ if __name__ == '__main__':
     states = np.array(states)
     true_state = np.array(true_state)
 
-    print(cov)
+    
     plt.scatter(true_state[:, 0], true_state[:,1], marker='+', color='r', s=180, lw=1)
     plt.scatter(states[:, 0], states[:,1], color='k')
     plt.xlabel('x')
     plt.ylabel('y')
     plt.xlim([0.,10.])
     plt.ylim([0.,10.])
-    plt.figure()
-    
     plt.show()
-    
-    

@@ -13,7 +13,7 @@ class PF:
         self.mean = 0
         self.std = 0
         self.N = N
-        self.dt = 0
+        self.dt = 0.1
         self.state_vector = np.zeros(state_vector_size)
         self.weights = np.zeros(self.N)
         #self.weights.fill(1./self.N)
@@ -21,6 +21,10 @@ class PF:
         self.landmarks = landmarks
         #self.R = [measure_std_error, control_std_error]
         self.R = measure_std_error
+        # range error
+        self.Q = np.diag([0.1])**2
+        # input error
+        #self.R = np.diag([1.0, np.deg2rad(40.0)])**2 
         
 
     def create_gaussian_particles(self, mean, std):
@@ -44,19 +48,16 @@ class PF:
         
     def predict(self, u, std, dt=1.):
         #N = len(self.particles)
-        
-        """
-        self.state_vector[0] = self.state_vector[0] + (-u[0]/u[1])*np.sin(self.state_vector[2])+(u[0]/u[1])*np.sin(self.state_vector[2]+u[1]*dt)
-        self.state_vector[1] = self.state_vector[1] + (u[0]/u[1])*np.cos(self.state_vector[2])-(u[0]/u[1])*np.cos(self.state_vector[2]+u[1]*dt)
-        self.state_vector[2] = self.state_vector[2] + u[1]*dt
-        # update heading
-        """
+        self.state_vector[0] += (-u[0]/u[1])*np.sin(self.state_vector[2])+(u[0]/u[1])*np.sin(self.state_vector[2]+u[1]*dt)
+        self.state_vector[1] += (u[0]/u[1])*np.cos(self.state_vector[2])-(u[0]/u[1])*np.cos(self.state_vector[2]+u[1]*dt)
+        self.state_vector[2] += u[1]*dt
 
         self.particles[:,0] += (-u[0]/u[1])*np.sin(self.particles[:,2])+(u[0]/u[1])*np.sin(self.particles[:,2]+u[1]*dt)
         self.particles[:,1] += (u[0]/u[1])*np.cos(self.particles[:,2])-(u[0]/u[1])*np.cos(self.particles[:,2]+u[1]*dt)
         self.particles[:,2] += u[1]*dt
-    def update(self, z, markers):
         
+    def update(self, z, markers):
+        self.weights.fill(1.)
         for i, landmark in enumerate(markers):
             distance = np.linalg.norm(self.particles[:, 0:2] - landmark, axis=1)
             self.weights *= scipy.stats.norm(distance, self.R).pdf(z[i])
@@ -64,22 +65,7 @@ class PF:
         self.weights += 1.e-300
         self.weights /= sum(self.weights)
         
-    """
-    def weight(self, z, var):
-        dist = np.sqrt((self.particles[:, 0] - z[0])**2 +
-                       (self.particles[:, 1] - z[1])**2)
 
-        # simplification assumes variance is invariant to world projection
-        n = scipy.stats.norm(0, np.sqrt(var))
-        prob = n.pdf(dist)
-
-        # particles far from a measurement will give us 0.0 for a probability
-        # due to floating point limits. Once we hit zero we can never recover,
-       # so add some small nonzero value to all points.
-        prob += 1.e-12
-        self.weights += prob
-        self.weights /= sum(self.weights)  # normalize
-    """
 
     def resample(self):
         
