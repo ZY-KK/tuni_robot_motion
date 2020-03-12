@@ -93,7 +93,7 @@ def marker_callback(msg):
     cov.append(np.sqrt(np.array(point_cov)))
     states.append(ekf.state_vector)
     #print(ekf.state_vector)
-    
+    #plot_covariance_ellipse(ekf.state_vector, ekf.cov_matrix)
 
     #ekf.update(ekf.state_vector[0], ekf.state_vector[1], ekf.state_vector[2], m_x, m_y)
     #states.append(ekf.state_vector)
@@ -103,6 +103,32 @@ def ground_tru_callback(msg):
     t_y = msg.pose.pose.position.y
     true_state.append([t_x, t_y])
 
+"""
+def plot_covariance_ellipse(xEst, PEst):  
+    Pxy = PEst[0:2, 0:2]
+    eigval, eigvec = np.linalg.eig(Pxy)
+
+    if eigval[0] >= eigval[1]:
+        bigind = 0
+        smallind = 1
+    else:
+        bigind = 1
+        smallind = 0
+
+    t = np.arange(0, 2 * math.pi + 0.1, 0.1)
+    a = math.sqrt(eigval[bigind])
+    b = math.sqrt(eigval[smallind])
+    x = [a * math.cos(it) for it in t]
+    y = [b * math.sin(it) for it in t]
+    angle = math.atan2(eigvec[bigind, 1], eigvec[bigind, 0])
+    rot = np.array([[math.cos(angle), math.sin(angle)],
+                    [-math.sin(angle), math.cos(angle)]])
+    fx = np.dot(rot, (np.array([x, y])))
+    px = np.array(fx[0, :] + xEst[0]).flatten()
+    py = np.array(fx[1, :] + xEst[1]).flatten()
+    
+    plt.plot(px, py, "--r")
+"""
 
 def ekf_loc():
     rospy.init_node('ekf_localization', anonymous=True)
@@ -120,14 +146,13 @@ if __name__ == '__main__':
     states = np.array(states)
     true_state = np.array(true_state)
 
-    print(cov)
+    plt.figure()
     plt.scatter(true_state[:, 0], true_state[:,1], marker='+', color='r', s=180, lw=1)
     plt.scatter(states[:, 0], states[:,1], color='k')
     plt.xlabel('x')
     plt.ylabel('y')
     plt.xlim([0.,10.])
     plt.ylim([0.,10.])
-    plt.figure()
     
     plt.show()
     

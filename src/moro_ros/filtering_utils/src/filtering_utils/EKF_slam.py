@@ -32,7 +32,7 @@ class EKF_SLAM:
         #print(self.state_vector)
 
     def predict(self, control_vector):
-        self.propagate_state(control_vector)
+        
         v = control_vector[0]
         w = control_vector[1]
         theta = self.state_vector[2]
@@ -40,7 +40,7 @@ class EKF_SLAM:
         G = 1.0*np.identity(self.F.shape[1]) + np.dot(np.dot(self.F.T, j_state), self.F)
         #print(G.shape,self.P.shape,  self.F.shape, self.R.shape)
         self.P = np.dot(np.dot(G, self.P), G.T)+np.dot(np.dot(self.F.T, self.Q), self.F)
-        
+        self.propagate_state(control_vector)
     def update(self, j, m_x, m_y,l_x, l_y, a, s):
         #print(self.state_vector)
         x = self.state_vector[0]
@@ -52,6 +52,7 @@ class EKF_SLAM:
             l_x = x + r*np.cos(a+theta)
             l_y = y = r*np.sin(a+theta)
             s = s
+            self.checked_land.append(s)
         
     
         q = (l_x-x)**2+(l_y-y)**2

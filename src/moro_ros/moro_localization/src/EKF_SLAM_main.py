@@ -22,7 +22,7 @@ ekf_slam.t = 0.5
 ekf_slam.Q = np.diag([0.01, 0.01, 0.0])
 ekf_slam.R = np.diag([1.0, 0.05, 1.0])
 #ekf.P = np.diag([.1, .1, .1])
-ekf_slam.state_vector = np.array([5.0, 5.0, 0.0, 7.30, 3.00, 1, 1.00, 1.00, 2, 9.00, 9.00, 3, 1.00, 8.00, 4, 5.80, 8.00, 5]).T
+ekf_slam.state_vector = np.array([5.0, 5.0, -np.pi, 7.30, 3.00, 1, 1.00, 1.00, 2, 9.00, 9.00, 3, 1.00, 8.00, 4, 5.80, 8.00, 5]).T
 states.append(ekf_slam.state_vector)
 
 
