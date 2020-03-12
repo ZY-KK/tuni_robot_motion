@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 sys.path.append('src/moro_ros/filtering_utils/src/')
 
-ekf_slam = EKF_SLAM(3, 2, 2)
+ekf_slam = EKF_SLAM(3, 2, 2, 5)
     # initialize
 
 landmarkers = np.array([[7.30, 3.00], [1.00, 1.00], [
@@ -19,12 +19,12 @@ landmarkers = np.array([[7.30, 3.00], [1.00, 1.00], [
 states = []
 true_state = []    
 ekf_slam.t = 0.5
-ekf_slam.q = np.diag([0.01, 0.01])
-ekf_slamkf.R = np.diag([0.5, 0.05, 0.05])
+ekf_slam.Q = np.diag([0.01, 0.01, 0.0])
+ekf_slam.R = np.diag([1.0, 0.05, 1.0])
 #ekf.P = np.diag([.1, .1, .1])
-ekf_slam.state_vector = np.array([5.0, 5.0, -np.pi])
+ekf_slam.state_vector = np.array([5.0, 5.0, 0.0, 7.30, 3.00, 1, 1.00, 1.00, 2, 9.00, 9.00, 3, 1.00, 8.00, 4, 5.80, 8.00, 5]).T
 states.append(ekf_slam.state_vector)
-ekf_slam.print_initials()
+
 
 
 def odom_callback(msg):
@@ -78,15 +78,22 @@ def marker_callback(msg):
         o_w = marker.pose.orientation.w
         #z_a = quat2euler(o_x, o_y, o_z, o_w)
         o_a = euler_from_quaternion([o_x, o_y, o_z, o_w])
-        K, H = ekf_slam.update(id, landmarkers[id-1][0],landmarkers[id-1][1], b_x, b_y, o_a[2], id)
-        K_z_sum+=np.dot(K, residual(np.array([b_x, b_y, o_a], ekf_slam.z))
-        K_h_sum+=np.dot(K, H)
+        #print(landmarkers[id-1][0],landmarkers[id-1][1])
+        K, H = ekf_slam.update(id, b_x, b_y,landmarkers[id-1][0],landmarkers[id-1][1], o_a[2], id)
+        r = np.sqrt(b_x**2+b_y**2)
+        z = np.array([r,  o_a[2], id])
+        #print(ekf_slam.z.shape, ekf_slam.z)
         
+        y = residual(z, ekf_slam.z)
+       
+        K_z_sum+=np.dot(K, y)
+        K_h_sum+=np.dot(K, H)
+      
     ekf_slam.state_vector = ekf_slam.state_vector+K_z_sum
-    ekf_slam.P = np.dot((ekf_slam.I-K_h_sum), ekf_slam.P)
+    ekf_slam.P = np.dot((1.0*np.eye(ekf_slam.state_vector.shape[0])-K_h_sum), ekf_slam.P)
     states.append(ekf_slam.state_vector)
     pass
-def residual(self, a, b):
+def residual(a, b):
     y = a - b
     y[1] = y[1] % (2 * np.pi)
     if y[1] > np.pi:
@@ -98,19 +105,18 @@ def ground_tru_callback(msg):
     true_state.append([t_x, t_y])
 
 
-def ekf_loc():
-    rospy.init_node('ekf_localization', anonymous=True)
+def ekf_slam_loc():
 
+    rospy.init_node('EKF_SLAM_main', anonymous=True)
     rospy.Subscriber("odom", Odometry, odom_callback)
     rospy.Subscriber("base_marker_detection", MarkerDetection, marker_callback)
     rospy.Subscriber("base_pose_ground_truth", Odometry, ground_tru_callback)
-
     rospy.spin()
 
 
 if __name__ == '__main__':
     
-    ekf_loc()
+    ekf_slam_loc()
     states = np.array(states)
     true_state = np.array(true_state)
 
